@@ -14,10 +14,8 @@ class ViewProfile extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ManageProfilePage()),
-          );
+          Navigator.of(context)
+              .pushNamed(ManageProfilePage.routeName, arguments: UserData());
         },
         child: Icon(Icons.edit),
       ),

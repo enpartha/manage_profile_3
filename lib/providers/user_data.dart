@@ -13,7 +13,7 @@ class UserData with ChangeNotifier {
     experience: '2',
   );
 
-  void updateProfile(Profile profileData) {
+  void updateProfile(Profile profileData, Profile editedProfile) {
     userProfile = profileData;
   }
 }
