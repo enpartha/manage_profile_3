@@ -59,12 +59,13 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      // _editedProfile = Provider.of<UserData>(context, listen: false);
+      _editedProfile = Provider.of<UserData>(context).data;
 
       _userCtrlr.text = _editedProfile.name;
       _genderCtrlr.text = _editedProfile.gender!;
       _hospitalCtrlr.text = _editedProfile.hospital!;
     }
+    _isInit = false;
     super.didChangeDependencies();
   }
 
@@ -87,16 +88,19 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   void _saveProfile() {
     final isValid = _formKey.currentState!.validate();
     if (!isValid) {
-      _editedProfile = Profile(
-          name: _userCtrlr.text,
-          gender: _genderCtrlr.text,
-          hospital: _hospitalCtrlr.text,
-          department: _departmentCtrlr.text,
-          role: _roleCtrlr.text,
-          qualification: _qualificationCtrlr.text,
-          experience: _expCtrlr.text);
+      return;
     }
     _formKey.currentState!.save();
+    _editedProfile = Profile(
+        name: _userCtrlr.text,
+        gender: _genderCtrlr.text,
+        hospital: _hospitalCtrlr.text,
+        department: _departmentCtrlr.text,
+        role: _roleCtrlr.text,
+        qualification: _qualificationCtrlr.text,
+        experience: _expCtrlr.text);
+    Provider.of<UserData>(context, listen: false).updateProfile(_editedProfile);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -109,6 +113,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     _qualificationCtrlr.dispose();
     _designationCtrlr.dispose();
     _dobCtrlr.dispose();
+    _expCtrlr.dispose();
     super.dispose();
   }
 

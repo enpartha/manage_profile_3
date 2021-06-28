@@ -2,7 +2,7 @@ import '../models/profile.dart';
 import 'package:flutter/material.dart';
 
 class UserData with ChangeNotifier {
-  Profile userProfile = Profile(
+  Profile _userProfile = Profile(
     name: 'Amit Sen',
     hospital: 'SSKM',
     department: 'Oncology',
@@ -13,7 +13,12 @@ class UserData with ChangeNotifier {
     experience: '2',
   );
 
-  void updateProfile(Profile profileData, Profile editedProfile) {
-    userProfile = profileData;
+  Profile get data {
+    return _userProfile;
+  }
+
+  void updateProfile(Profile profileData) {
+    _userProfile = profileData;
+    notifyListeners();
   }
 }
