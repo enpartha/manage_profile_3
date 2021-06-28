@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:manage_profile_3/screens/manage_profile.dart';
 import '../providers/user_data.dart';
 
-class ViewProfile extends StatelessWidget {
+class ViewProfile extends StatefulWidget {
   const ViewProfile({Key? key}) : super(key: key);
+  static const routeName = '/view_profile';
 
+  @override
+  _ViewProfileState createState() => _ViewProfileState();
+}
+
+class _ViewProfileState extends State<ViewProfile> {
   @override
   Widget build(BuildContext context) {
     final _userData = UserData().userProfile;
@@ -14,8 +20,10 @@ class ViewProfile extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .pushNamed(ManageProfilePage.routeName, arguments: UserData());
+          setState(() {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => ManageProfilePage()));
+          });
         },
         child: Icon(Icons.edit),
       ),

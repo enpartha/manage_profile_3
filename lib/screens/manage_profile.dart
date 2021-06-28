@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:manage_profile_3/models/profile.dart';
+// ignore: unused_import
 import 'package:manage_profile_3/providers/user_data.dart';
+// ignore: unused_import
 import 'package:provider/provider.dart';
 
 class ManageProfilePage extends StatefulWidget {
@@ -21,20 +23,50 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   Color _iconColor = Colors.blue;
   // final _formKey = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
-  TextEditingController _userCtrlr = TextEditingController();
-  TextEditingController _genderCtrlr = TextEditingController();
-  TextEditingController _hospitalCtrlr = TextEditingController();
-  TextEditingController _departmentCtrlr = TextEditingController();
-  TextEditingController _roleCtrlr = TextEditingController();
-  TextEditingController _designationCtrlr = TextEditingController();
-  TextEditingController _qualificationCtrlr = TextEditingController();
-  TextEditingController _dobCtrlr = TextEditingController();
-  TextEditingController _expCtrlr = TextEditingController();
+  final _userCtrlr = TextEditingController();
+  final _genderCtrlr = TextEditingController();
+  final _hospitalCtrlr = TextEditingController();
+  final _departmentCtrlr = TextEditingController();
+  final _roleCtrlr = TextEditingController();
+  final _designationCtrlr = TextEditingController();
+  final _qualificationCtrlr = TextEditingController();
+  final _dobCtrlr = TextEditingController();
+  final _expCtrlr = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  var _editedProfile = Profile(
+    name: '',
+    gender: '',
+    hospital: '',
+    department: '',
+    role: '',
+    qualification: '',
+    experience: '2',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   // void dateshower() {
   //   _openDatePicker(context);
   //   _textEditingController.text = DateFormat('yyyy/MM/dd').format(date);
   // }
+
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      // _editedProfile = Provider.of<UserData>(context, listen: false);
+
+      _userCtrlr.text = _editedProfile.name;
+      _genderCtrlr.text = _editedProfile.gender!;
+      _hospitalCtrlr.text = _editedProfile.hospital!;
+    }
+    super.didChangeDependencies();
+  }
 
   _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -52,30 +84,6 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     }
   }
 
-  var _editedProfile = Profile(
-    name: '',
-    gender: '',
-    hospital: '',
-    department: '',
-    role: '',
-    qualification: '',
-    experience: '2',
-  );
-
-  @override
-  void dispose() {
-    _userCtrlr.dispose();
-    _genderCtrlr.dispose();
-    _hospitalCtrlr.dispose();
-    _departmentCtrlr.dispose();
-    _roleCtrlr.dispose();
-    _qualificationCtrlr.dispose();
-    _designationCtrlr.dispose();
-    _dobCtrlr.dispose();
-    super.dispose();
-  }
-
-  final _formKey = GlobalKey<FormState>();
   void _saveProfile() {
     final isValid = _formKey.currentState!.validate();
     if (!isValid) {
@@ -92,8 +100,20 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   }
 
   @override
+  void dispose() {
+    _userCtrlr.dispose();
+    _genderCtrlr.dispose();
+    _hospitalCtrlr.dispose();
+    _departmentCtrlr.dispose();
+    _roleCtrlr.dispose();
+    _qualificationCtrlr.dispose();
+    _designationCtrlr.dispose();
+    _dobCtrlr.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var _formKey;
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
