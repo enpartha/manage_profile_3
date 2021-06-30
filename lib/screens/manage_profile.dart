@@ -12,10 +12,9 @@ class ManageProfilePage extends StatefulWidget {
 }
 
 class _ManageProfilePageState extends State<ManageProfilePage> {
-  Object? role;
-  Object? gender;
-  Object? qualification;
-
+  Object? _role;
+  Object? _gender;
+  Object? _qualification;
   List listItem = ['Nurse', 'Nursing Incharge', 'Supervisor'];
   List listGender = ['Male', 'Female'];
   List listQualification = ['Nursing Degree1', 'Bachelor'];
@@ -23,7 +22,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   Color _iconColor = Colors.blue;
   // final _formKey = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
-  final _userCtrlr = TextEditingController();
+  final _nameCtrlr = TextEditingController();
 
   final _hospitalCtrlr = TextEditingController();
   final _departmentCtrlr = TextEditingController();
@@ -34,15 +33,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   final _expCtrlr = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  var _editedProfile = Profile(
-    name: '',
-    gender: '',
-    hospital: '',
-    department: '',
-    role: '',
-    qualification: '',
-    experience: '2',
-  );
+  var _editedProfile = Profile();
 
   @override
   void initState() {
@@ -61,7 +52,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     if (_isInit) {
       _editedProfile = Provider.of<UserData>(context).data;
 
-      _userCtrlr.text = _editedProfile.name;
+      _nameCtrlr.text = _editedProfile.name;
       // _genderCtrlr.text = _editedProfile.gender!;
       _hospitalCtrlr.text = _editedProfile.hospital!;
       _departmentCtrlr.text = _editedProfile.department!;
@@ -95,8 +86,8 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     }
     _formKey.currentState!.save();
     _editedProfile = Profile(
-        name: _userCtrlr.text,
-        // gender: _genderCtrlr.text,
+        name: _nameCtrlr.text,
+        gender: _gender.toString(),
         hospital: _hospitalCtrlr.text,
         department: _departmentCtrlr.text,
         // role: _roleCtrlr.text,
@@ -108,7 +99,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
 
   @override
   void dispose() {
-    _userCtrlr.dispose();
+    _nameCtrlr.dispose();
     // _genderCtrlr.dispose();
     _hospitalCtrlr.dispose();
     _departmentCtrlr.dispose();
@@ -167,7 +158,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                     decoration: InputDecoration(
                       labelText: "Name",
                     ),
-                    controller: _userCtrlr,
+                    controller: _nameCtrlr,
                   ),
                   // trailing: Icon(Icons.edit),
                 ),
@@ -185,10 +176,10 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                     dropdownColor: Colors.white,
                     // icon: Icon(Icons.arrow_drop_down),
                     hint: Text("Select Gender"),
-                    value: gender,
+                    value: _gender == null ? _editedProfile.gender : _gender,
                     onChanged: (value) {
                       setState(() {
-                        gender = value;
+                        _gender = value;
                       });
                     },
                     items: listGender.map((value) {
@@ -251,10 +242,10 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                     dropdownColor: Colors.white,
                     // icon: Icon(Icons.arrow_drop_down),
                     hint: Text("Role/Designation"),
-                    value: role,
+                    value: _role,
                     onChanged: (newValue) {
                       setState(() {
-                        role = newValue;
+                        _role = newValue;
                       });
                     },
                     items: listItem.map((valueItem) {
@@ -279,10 +270,10 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                     dropdownColor: Colors.white,
                     // icon: Icon(Icons.arrow_drop_down),
                     hint: Text("Select Qualification"),
-                    value: qualification,
+                    value: _qualification,
                     onChanged: (value) {
                       setState(() {
-                        qualification = value;
+                        _qualification = value;
                       });
                     },
                     items: listQualification.map((value) {
