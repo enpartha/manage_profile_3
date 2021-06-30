@@ -20,15 +20,11 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   List listQualification = ['Nursing Degree1', 'Bachelor'];
 
   Color _iconColor = Colors.blue;
-  // final _formKey = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
   final _nameCtrlr = TextEditingController();
-
   final _hospitalCtrlr = TextEditingController();
   final _departmentCtrlr = TextEditingController();
-  // final _roleCtrlr = TextEditingController();
   final _designationCtrlr = TextEditingController();
-  // final _qualificationCtrlr = TextEditingController();
   final _dobCtrlr = TextEditingController();
   final _expCtrlr = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -51,13 +47,9 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   void didChangeDependencies() {
     if (_isInit) {
       _editedProfile = Provider.of<UserData>(context).data;
-
       _nameCtrlr.text = _editedProfile.name;
-      // _genderCtrlr.text = _editedProfile.gender!;
       _hospitalCtrlr.text = _editedProfile.hospital!;
       _departmentCtrlr.text = _editedProfile.department!;
-      // _roleCtrlr.text = _editedProfile.role!;
-      // _qualificationCtrlr.text = _editedProfile.qualification!;
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -90,8 +82,6 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
         gender: _gender.toString(),
         hospital: _hospitalCtrlr.text,
         department: _departmentCtrlr.text,
-        // role: _roleCtrlr.text,
-        // qualification: _qualificationCtrlr.text,
         experience: _expCtrlr.text);
     Provider.of<UserData>(context, listen: false).updateProfile(_editedProfile);
     Navigator.of(context).pop();
@@ -100,11 +90,8 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   @override
   void dispose() {
     _nameCtrlr.dispose();
-    // _genderCtrlr.dispose();
     _hospitalCtrlr.dispose();
     _departmentCtrlr.dispose();
-    // _roleCtrlr.dispose();
-    // _qualificationCtrlr.dispose();
     _designationCtrlr.dispose();
     _dobCtrlr.dispose();
     _expCtrlr.dispose();
@@ -242,7 +229,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                     dropdownColor: Colors.white,
                     // icon: Icon(Icons.arrow_drop_down),
                     hint: Text("Role/Designation"),
-                    value: _role,
+                    value: _role == null ? _editedProfile.role : _role,
                     onChanged: (newValue) {
                       setState(() {
                         _role = newValue;
@@ -270,7 +257,9 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                     dropdownColor: Colors.white,
                     // icon: Icon(Icons.arrow_drop_down),
                     hint: Text("Select Qualification"),
-                    value: _qualification,
+                    value: _qualification == null
+                        ? _editedProfile.qualification
+                        : _qualification,
                     onChanged: (value) {
                       setState(() {
                         _qualification = value;
