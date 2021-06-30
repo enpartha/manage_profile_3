@@ -24,12 +24,12 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   // final _formKey = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
   final _userCtrlr = TextEditingController();
-  final _genderCtrlr = TextEditingController();
+
   final _hospitalCtrlr = TextEditingController();
   final _departmentCtrlr = TextEditingController();
-  final _roleCtrlr = TextEditingController();
+  // final _roleCtrlr = TextEditingController();
   final _designationCtrlr = TextEditingController();
-  final _qualificationCtrlr = TextEditingController();
+  // final _qualificationCtrlr = TextEditingController();
   final _dobCtrlr = TextEditingController();
   final _expCtrlr = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -62,8 +62,11 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
       _editedProfile = Provider.of<UserData>(context).data;
 
       _userCtrlr.text = _editedProfile.name;
-      _genderCtrlr.text = _editedProfile.gender!;
+      // _genderCtrlr.text = _editedProfile.gender!;
       _hospitalCtrlr.text = _editedProfile.hospital!;
+      _departmentCtrlr.text = _editedProfile.department!;
+      // _roleCtrlr.text = _editedProfile.role!;
+      // _qualificationCtrlr.text = _editedProfile.qualification!;
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -80,7 +83,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
         selectedDate = picked;
         var date =
             "${picked.toLocal().day}/${picked.toLocal().month}/${picked.toLocal().year}";
-        _userCtrlr.text = date;
+        _dobCtrlr.text = date;
       });
     }
   }
@@ -93,11 +96,11 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     _formKey.currentState!.save();
     _editedProfile = Profile(
         name: _userCtrlr.text,
-        gender: _genderCtrlr.text,
+        // gender: _genderCtrlr.text,
         hospital: _hospitalCtrlr.text,
         department: _departmentCtrlr.text,
-        role: _roleCtrlr.text,
-        qualification: _qualificationCtrlr.text,
+        // role: _roleCtrlr.text,
+        // qualification: _qualificationCtrlr.text,
         experience: _expCtrlr.text);
     Provider.of<UserData>(context, listen: false).updateProfile(_editedProfile);
     Navigator.of(context).pop();
@@ -106,11 +109,11 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   @override
   void dispose() {
     _userCtrlr.dispose();
-    _genderCtrlr.dispose();
+    // _genderCtrlr.dispose();
     _hospitalCtrlr.dispose();
     _departmentCtrlr.dispose();
-    _roleCtrlr.dispose();
-    _qualificationCtrlr.dispose();
+    // _roleCtrlr.dispose();
+    // _qualificationCtrlr.dispose();
     _designationCtrlr.dispose();
     _dobCtrlr.dispose();
     _expCtrlr.dispose();
