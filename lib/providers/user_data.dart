@@ -9,7 +9,7 @@ class UserData with ChangeNotifier {
     role: 'Nurse',
     dateOfBirth: DateTime(1991, 12, 25),
     gender: 'Male',
-    qualification: 'Diploma',
+    qualification: 'Nursing Degree1',
     experience: '2',
   );
 
