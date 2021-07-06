@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 
 class UserData with ChangeNotifier {
   Profile _userProfile = Profile(
-    name: 'Amit Sen',
-    hospital: 'SSKM',
-    department: 'Oncology',
-    role: 'Nurse',
-    dateOfBirth: DateTime(1991, 12, 25),
-    gender: 'Male',
-    qualification: 'Nursing Degree1',
-    experience: '2',
-  );
+      name: 'Amit Sen',
+      hospital: 'SSKM',
+      department: 'Oncology',
+      role: 'Nurse',
+      dateOfBirth: DateTime(1991, 12, 25),
+      gender: 'Male',
+      qualification: 'Nursing Degree1',
+      experience: '2',
+      registration: '101');
 
   Profile get data {
     return _userProfile;

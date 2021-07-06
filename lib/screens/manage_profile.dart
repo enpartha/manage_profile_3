@@ -15,6 +15,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   Object? _role;
   Object? _gender;
   Object? _qualification;
+  Object? _dateofBirth;
   List listItem = ['Nurse', 'Nursing Incharge', 'Supervisor'];
   List listGender = ['Male', 'Female'];
   List listQualification = ['Nursing Degree1', 'Bachelor'];
@@ -27,6 +28,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   final _designationCtrlr = TextEditingController();
   final _dobCtrlr = TextEditingController();
   final _expCtrlr = TextEditingController();
+  final _regCtrlr = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   var _editedProfile = Profile();
@@ -48,8 +50,13 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     if (_isInit) {
       _editedProfile = Provider.of<UserData>(context).data;
       _nameCtrlr.text = _editedProfile.name;
+      _gender = _editedProfile.gender;
       _hospitalCtrlr.text = _editedProfile.hospital!;
       _departmentCtrlr.text = _editedProfile.department!;
+      _role = _editedProfile.role;
+      _regCtrlr.text = _editedProfile.registration!;
+      _qualification = _editedProfile.qualification;
+      _expCtrlr.text = _editedProfile.experience!;
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -82,6 +89,9 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
         gender: _gender.toString(),
         hospital: _hospitalCtrlr.text,
         department: _departmentCtrlr.text,
+        role: _role.toString(),
+        qualification: _qualification.toString(),
+        registration: _regCtrlr.text,
         experience: _expCtrlr.text);
     Provider.of<UserData>(context, listen: false).updateProfile(_editedProfile);
     Navigator.of(context).pop();
@@ -95,6 +105,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     _designationCtrlr.dispose();
     _dobCtrlr.dispose();
     _expCtrlr.dispose();
+    _regCtrlr.dispose();
     super.dispose();
   }
 
@@ -286,6 +297,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                     decoration: InputDecoration(
                       labelText: "Registration Number",
                     ),
+                    controller: _regCtrlr,
                   ),
                   // trailing: Icon(Icons.edit),
                 ),
@@ -338,6 +350,22 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                   leading: Container(
                     height: double.infinity,
                     child: Icon(
+                      Icons.work,
+                      color: _iconColor,
+                      size: 30,
+                    ),
+                  ),
+                  title: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Year Of Experience",
+                    ),
+                    controller: _expCtrlr,
+                  ),
+                ),
+                ListTile(
+                  leading: Container(
+                    height: double.infinity,
+                    child: Icon(
                       Icons.calendar_today,
                       color: _iconColor,
                       size: 30,
@@ -352,7 +380,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
