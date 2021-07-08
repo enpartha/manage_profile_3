@@ -21,8 +21,7 @@ class UserData with ChangeNotifier {
         _profileItems.indexWhere((element) => element.userId == userId);
 
     if (profileIndex >= 0) {
-      final _url = Uri.https(
-          'https://manage-profile-default-rtdb.firebaseio.com/',
+      final _url = Uri.https('manage-profile-default-rtdb.firebaseio.com',
           'profileData/$userId.json');
       http.patch(_url,
           body: json.encode({
@@ -44,8 +43,8 @@ class UserData with ChangeNotifier {
 
   static List<Profile> _profileItems = [];
 
-  final url = Uri.https(
-      'https://manage-profile-default-rtdb.firebaseio.com/', '/profiles.json');
+  final url =
+      Uri.https('manage-profile-default-rtdb.firebaseio.com', '/profiles.json');
   Profile get data {
     return _userProfile;
   }
