@@ -10,13 +10,13 @@ class Profile with ChangeNotifier {
   String? qualification;
   String? experience;
   String? registration;
-  DateTime? dateOfBirth;
+  DateTime dateOfBirth = DateTime(1990);
   String? userId;
   String? groupId;
 
   Profile({
     this.name = 'User',
-    this.dateOfBirth,
+    required this.dateOfBirth,
     this.department,
     this.experience,
     this.gender,

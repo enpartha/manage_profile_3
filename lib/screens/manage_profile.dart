@@ -31,7 +31,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   final _regCtrlr = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  var _editedProfile = Profile();
+  var _editedProfile = Profile(dateOfBirth: DateTime(1990));
 
   var userId;
 
@@ -100,40 +100,33 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
         role: _role.toString(),
         qualification: _qualification.toString(),
         registration: _regCtrlr.text,
-        experience: _expCtrlr.text);
+        experience: _expCtrlr.text,
+        dateOfBirth: DateTime(1990));
     setState(() {
       _isLoading = true;
     });
-    if (userId != null) {
+
+    try {
       await Provider.of<UserData>(context, listen: false)
           .updateProfile(userId, _editedProfile);
+    } catch (error) {
+      print(error.toString());
+      await showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('An error occured'),
+          content: Text('Something went wrong'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context), child: Text('Okay'))
+          ],
+        ),
+      );
+    } finally {
       setState(() {
         _isLoading = false;
       });
       Navigator.of(context).pop();
-    } else {
-      try {
-        await Provider.of<UserData>(context, listen: false)
-            .addProfile(_editedProfile, context);
-      } catch (error) {
-        print(error.toString());
-        await showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text('An error occured'),
-            content: Text('Something went wrong'),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.pop(context), child: Text('Okay'))
-            ],
-          ),
-        );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
-      }
     }
   }
 
