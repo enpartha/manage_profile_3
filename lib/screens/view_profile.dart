@@ -9,6 +9,7 @@ class ViewProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<UserData>(context).fetchUserData();
     final _userData = Provider.of<UserData>(context).data;
     return Scaffold(
       appBar: AppBar(
