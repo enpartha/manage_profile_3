@@ -3,13 +3,23 @@ import 'package:manage_profile_3/screens/manage_profile.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_data.dart';
 
+// ignore: must_be_immutable
 class ViewProfile extends StatelessWidget {
-  const ViewProfile({Key? key}) : super(key: key);
+  var _isInit = true;
+
+  // ViewProfile({Key? key}) : super(key: key);
   static const routeName = '/view_profile';
+
+  void _loadPage(context) {
+    if (_isInit) {
+      Provider.of<UserData>(context, listen: false).fetchProfile();
+      _isInit = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<UserData>(context).fetchUserData();
+    _loadPage(context);
     final _userData = Provider.of<UserData>(context).data;
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +51,7 @@ class ViewProfile extends StatelessWidget {
               ShowProfileData(_userData.role),
               ShowProfileData(_userData.qualification),
               ShowProfileData(_userData.registration),
-              ShowProfileData(_userData.experience! + ' Years'),
+              ShowProfileData(_userData.experience.toString() + ' Years'),
             ],
           ),
         ),

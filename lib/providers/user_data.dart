@@ -5,113 +5,61 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class UserData with ChangeNotifier {
-  Profile _userProfile = Profile(
-      name: 'Amit Sen',
-      hospital: 'SSKM',
-      department: 'Oncology',
-      role: 'Nurse',
-      dateOfBirth: DateTime(1991, 12, 25),
-      gender: 'Male',
-      qualification: 'Nursing Degree1',
-      experience: '2',
-      registration: '101');
+  Profile _userProfile = Profile();
+  final url = Uri.https(
+      'cytoclick-dev-default-rtdb.asia-southeast1.firebasedatabase.app',
+      '/profile.json');
 
-  Future<void> updateProfile(userId, Profile profileData) async {
-    // final profileIndex =
-    //     _profileItems.indexWhere((element) => element.userId == userId);
-
-    final date =
-        "${data.dateOfBirth.toLocal().day}/${data.dateOfBirth.toLocal().month}/${data.dateOfBirth.toLocal().year}";
-    print("1");
-
-    final _url = Uri.https(
-        'manage-profile-default-rtdb.firebaseio.com', '/userData.json');
-    http.patch(_url,
-        body: json.encode({
-          'name': data.name,
-          'gender': data.gender,
-          'hospital': data.hospital,
-          'department': data.department,
-          'role': data.role,
-          'qualification': data.qualification,
-          'registration': data.registration,
-          'experience': data.experience,
-          'dateOfBirth': date,
-        }));
-    print("2");
-    // _profileItems[profileIndex] = data;
-    // _profileItems[profileIndex].userId = userId;
-
-    _userProfile = profileData;
-  }
-
-  // static List<Profile> _profileItems = [];
-
-  final url =
-      Uri.https('manage-profile-default-rtdb.firebaseio.com', '/userData.json');
-  Profile get data {
-    return _userProfile;
-  }
-
-  Future<void> fetchUserData() async {
+  Future<void> fetchProfile() async {
     try {
       final response = await http.get(url);
       final decodedJSON = jsonDecode(response.body);
 
-      final extractedData =
+      final profileData =
           decodedJSON != null ? decodedJSON as Map<String, dynamic> : {};
-      print(extractedData);
-      extractedData.forEach((profileId, profileData) {
-        final loadedProfile = Profile(
-          userId: profileId,
-          name: profileData['name'],
-          gender: profileData['gender'],
-          hospital: profileData['hospital'],
-          department: profileData['department'],
-          role: profileData['role'],
-          qualification: profileData['qualification'],
-          registration: profileData['registration'],
-          experience: profileData['experience'],
-          dateOfBirth: profileData['dateOfBirth'],
-        );
-        _userProfile = loadedProfile;
-      });
+      // print(decodedJSON);
+
+      final loadedProfile = profileData.isEmpty
+          ? Profile()
+          : Profile(
+              // userId: profileId,
+              name: profileData['name'],
+              gender: profileData['gender'],
+              hospital: profileData['hospital'],
+              department: profileData['department'],
+              role: profileData['role'],
+              qualification: profileData['qualification'],
+              registration: profileData['registration'],
+              experience: profileData['experience'],
+              dateOfBirth: DateTime.parse(profileData['dateOfBirth']),
+            );
+
+      _userProfile = loadedProfile;
+      notifyListeners();
     } catch (error) {
       print(error);
     }
   }
 
-  // Future<void> addProfile(data, BuildContext context) async {
-  //   try {
-  //     final response = await http.post(
-  //       url,
-  //       body: json.encode({
-  //         'name': data.name,
-  //         'gender': data.gender,
-  //         'hospital': data.hospital,
-  //         'department': data.department,
-  //         'role': data.role,
-  //         'qualification': data.qualification,
-  //         'registration': data.registration,
-  //         'experience': data.experience,
-  //         'dateOfBirth': data.dateOfBirth,
-  //       }),
-  //     );
-  //     final newProfile = Profile(
-  //         name: data.name,
-  //         gender: data.gender,
-  //         hospital: data.hospital,
-  //         department: data.department,
-  //         role: data.role,
-  //         registration: data.registration,
-  //         qualification: data.qualification,
-  //         experience: data.experience,
-  //         dateOfBirth: data.dateOfBirth,
-  //         userId: json.decode(response.body)['name']);
-  //     _profileItems.add(newProfile);
-  //     notifyListeners();
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+  Future<void> updateProfile(userId, Profile profileData) async {
+    http.patch(url,
+        body: json.encode({
+          'name': profileData.name,
+          'gender': profileData.gender,
+          'hospital': profileData.hospital,
+          'department': profileData.department,
+          'role': profileData.role,
+          'qualification': profileData.qualification,
+          'registration': profileData.registration,
+          'experience': profileData.experience,
+          'dateOfBirth': profileData.dateOfBirth!.toIso8601String(),
+        }));
+
+    _userProfile = profileData;
+    notifyListeners();
+  }
+
+  Profile get data {
+    return _userProfile;
+  }
 }
