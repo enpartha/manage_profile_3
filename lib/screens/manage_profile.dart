@@ -13,6 +13,8 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   String? _role;
   String? _gender;
   String? _qualification;
+  DateTime? _dob;
+  // var date="${data.dateOfBirth.toLocal().day}/${data.dateOfBirth.toLocal().month}/${data.dateOfBirth.toLocal().year}";
 
   List listRole = ['Nurse', 'Nursing Incharge', 'Supervisor'];
   List listGender = ['Male', 'Female'];
@@ -59,6 +61,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
       _regCtrlr.text = _editedProfile.registration;
       _qualification = _editedProfile.qualification;
       _expCtrlr.text = _editedProfile.experience;
+      // _dobCtrlr.text = _editedProfile.dateOfBirth as String;
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -367,7 +370,11 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                         ),
                         title: GestureDetector(
                           child: TextFormField(
-                            onTap: () => _selectDate(context),
+                            onTap: () {
+                              _dob == null
+                                  ? _selectDate(context)
+                                  : Text('Enter the date');
+                            },
                             controller: _dobCtrlr,
                             decoration: InputDecoration(
                               labelText: "Date of Birth",
