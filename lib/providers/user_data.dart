@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 class UserData with ChangeNotifier {
   Profile _userProfile = Profile();
   final url = Uri.https(
-      'profile-managment-default-rtdb.firebaseio.com', '/profile.json');
+      'cytoclick-dev-default-rtdb.asia-southeast1.firebasedatabase.app',
+      '/profile.json');
 
   Future<void> fetchProfile() async {
     try {
@@ -30,7 +31,9 @@ class UserData with ChangeNotifier {
               qualification: profileData['qualification'],
               registration: profileData['registration'],
               experience: profileData['experience'],
-              dateOfBirth: DateTime.parse(profileData['dateOfBirth']),
+              dateOfBirth: profileData['dateOfBirth'] == null
+                  ? null
+                  : DateTime.parse(profileData['dateOfBirth']),
             );
 
       _userProfile = loadedProfile;
@@ -51,7 +54,9 @@ class UserData with ChangeNotifier {
           'qualification': profileData.qualification,
           'registration': profileData.registration,
           'experience': profileData.experience,
-          'dateOfBirth': profileData.dateOfBirth!.toIso8601String(),
+          'dateOfBirth': profileData.dateOfBirth == null
+              ? null
+              : profileData.dateOfBirth!.toIso8601String(),
         }));
 
     _userProfile = profileData;

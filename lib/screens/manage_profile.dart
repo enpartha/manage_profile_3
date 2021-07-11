@@ -21,12 +21,10 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   List listQualification = ['Nursing Degree1', 'Bachelor'];
 
   Color _iconColor = Colors.blue;
-  DateTime selectedDate = DateTime.now();
   final _nameCtrlr = TextEditingController();
   final _hospitalCtrlr = TextEditingController();
   final _departmentCtrlr = TextEditingController();
   final _designationCtrlr = TextEditingController();
-  final _dobCtrlr = TextEditingController();
   final _expCtrlr = TextEditingController();
   final _regCtrlr = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -34,6 +32,8 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   var _editedProfile = Profile();
 
   var userId;
+
+  String _dobFormField = 'Select Date of Birth';
 
   @override
   void initState() {
@@ -61,7 +61,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
       _regCtrlr.text = _editedProfile.registration;
       _qualification = _editedProfile.qualification;
       _expCtrlr.text = _editedProfile.experience;
-      // _dobCtrlr.text = _editedProfile.dateOfBirth as String;
+      _dob = _editedProfile.dateOfBirth;
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -70,15 +70,15 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
+        initialDate: _dob == null ? DateTime(1990) : _dob!,
         firstDate: DateTime(1947),
         lastDate: DateTime(2050));
-    if (picked != null && picked != selectedDate) {
+    if (picked != null && picked != _dob) {
       setState(() {
-        selectedDate = picked;
+        _dob = picked;
         var date =
             "${picked.toLocal().day}/${picked.toLocal().month}/${picked.toLocal().year}";
-        _dobCtrlr.text = date;
+        _dobFormField = date;
       });
     }
   }
@@ -98,7 +98,8 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
         qualification: _qualification,
         registration: _regCtrlr.text,
         experience: _expCtrlr.text,
-        dateOfBirth: DateTime(1990));
+        dateOfBirth: _dob);
+    print('saved');
     setState(() {
       _isLoading = true;
     });
@@ -133,7 +134,6 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     _hospitalCtrlr.dispose();
     _departmentCtrlr.dispose();
     _designationCtrlr.dispose();
-    _dobCtrlr.dispose();
     _expCtrlr.dispose();
     _regCtrlr.dispose();
     super.dispose();
@@ -141,6 +141,10 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    _dobFormField = _dob == null
+        ? _dobFormField
+        : "${_dob!.toLocal().day}/${_dob!.toLocal().month}/${_dob!.toLocal().year}";
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
@@ -261,9 +265,9 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                           // icon: Icon(Icons.arrow_drop_down),
                           hint: Text("Role/Designation"),
                           value: _role,
-                          onChanged: (newValue) {
+                          onChanged: (value) {
                             setState(() {
-                              _role = newValue.toString();
+                              _role = value.toString();
                             });
                           },
                           items: listRole.map((valueItem) {
@@ -369,17 +373,10 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                           ),
                         ),
                         title: GestureDetector(
-                          child: TextFormField(
-                            onTap: () {
-                              _dob == null
-                                  ? _selectDate(context)
-                                  : Text('Enter the date');
-                            },
-                            controller: _dobCtrlr,
-                            decoration: InputDecoration(
-                              labelText: "Date of Birth",
-                            ),
-                          ),
+                          onTap: () {
+                            _selectDate(context);
+                          },
+                          child: Text(_dobFormField),
                         ),
                       ),
                     ],
