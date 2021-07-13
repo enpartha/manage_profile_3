@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:manage_profile_3/models/profile.dart';
 import 'package:manage_profile_3/providers/user_data.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +16,6 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   String? _gender;
   String? _qualification;
   DateTime? _dob;
-  // var date="${data.dateOfBirth.toLocal().day}/${data.dateOfBirth.toLocal().month}/${data.dateOfBirth.toLocal().year}";
 
   List listRole = ['Nurse', 'Nursing Incharge', 'Supervisor'];
   List listGender = ['Male', 'Female'];
@@ -30,10 +31,25 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   final _formKey = GlobalKey<FormState>();
 
   var _editedProfile = Profile();
-
   var userId;
 
   String _dobFormField = 'Select Date of Birth';
+
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
+  _takePhoto(BuildContext context, ImageSource source) async {
+    final _pickedFile = await _picker.getImage(
+      source: source,
+    );
+    setState(() {
+      if (_pickedFile != null) {
+        _imageFile = File(_pickedFile.path);
+      } else {
+        print("No image has been selected");
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -70,7 +86,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: _dob == null ? DateTime(1990) : _dob!,
+        initialDate: _dob == null ? DateTime(2000, 9, 7, 10) : _dob!,
         firstDate: DateTime(1947),
         lastDate: DateTime(2050));
     if (picked != null && picked != _dob) {
@@ -90,6 +106,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     }
     _formKey.currentState!.save();
     _editedProfile = Profile(
+        // profilePhoto: _imageFile ,
         name: _nameCtrlr.text,
         gender: _gender,
         hospital: _hospitalCtrlr.text,
@@ -164,15 +181,103 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                   child: Column(
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(top: 25),
-                        child: Center(
-                          child: CircleAvatar(
-                            radius: 60.0,
-                            backgroundColor: Colors.white,
-                            // backgroundImage: AssetImage("assets/images/user2.jpg"),
-                          ),
-                        ),
-                      ),
+                          padding: const EdgeInsets.only(top: 25),
+                          child: Stack(
+                            children: [
+                              Container(
+                                child: CircleAvatar(
+                                    radius: 60.0,
+                                    // backgroundColor: Colors.white,
+                                    backgroundImage: _imageFile == null
+                                        ? AssetImage("assets/images/OIP.jpg")
+                                        : FileImage(_imageFile!)
+                                            as ImageProvider),
+                              ),
+                              Positioned(
+                                top: 70,
+                                left: 66,
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                              "Choose an Option",
+                                              style:
+                                                  TextStyle(color: Colors.blue),
+                                            ),
+                                            content: SingleChildScrollView(
+                                              child: ListBody(
+                                                children: [
+                                                  InkWell(
+                                                    onTap: () {
+                                                      _takePhoto(context,
+                                                          ImageSource.camera);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    splashColor:
+                                                        Colors.blue[50],
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.camera,
+                                                          color: Colors.black,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(12.0),
+                                                          child: Text(
+                                                            "Camera",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      _takePhoto(context,
+                                                          ImageSource.gallery);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    splashColor:
+                                                        Colors.blue[50],
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.image,
+                                                          color: Colors.black,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(12.0),
+                                                          child: Text(
+                                                            "Gallery",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                  },
+                                  mini: true,
+                                  child: Icon(Icons.add_a_photo),
+                                ),
+                              )
+                            ],
+                          )),
                       ListTile(
                         leading: Container(
                           height: double.infinity,

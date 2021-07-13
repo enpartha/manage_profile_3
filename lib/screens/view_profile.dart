@@ -41,6 +41,7 @@ class ViewProfile extends StatelessWidget {
               CircleAvatar(
                 radius: 60.0,
                 backgroundColor: Colors.white,
+
                 // backgroundImage: ,
               ),
               ShowProfileData(_userData.name),
