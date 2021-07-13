@@ -78,6 +78,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
       _qualification = _editedProfile.qualification;
       _expCtrlr.text = _editedProfile.experience;
       _dob = _editedProfile.dateOfBirth;
+      _imageFile = _editedProfile.profilePhoto as File?;
     }
     _isInit = false;
     super.didChangeDependencies();
