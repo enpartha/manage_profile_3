@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 class UserData with ChangeNotifier {
   Profile _userProfile = Profile();
   final url = Uri.https(
-      'profile-managment-default-rtdb.firebaseio.com', '/profile.json');
+      'cytoclick-dev-default-rtdb.asia-southeast1.firebasedatabase.app',
+      '/profile.json');
 
   Future<void> fetchProfile() async {
     try {

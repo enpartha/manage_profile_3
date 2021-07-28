@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class Profile with ChangeNotifier {
-  String? profilePhoto;
+  FileImage? profilePhoto;
   String name;
   String? gender;
   String hospital;

@@ -35,7 +35,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
 
   String _dobFormField = 'Select Date of Birth';
 
-  File? _imageFile;
+  FileImage? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
   _takePhoto(BuildContext context, ImageSource source) async {
@@ -44,7 +44,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     );
     setState(() {
       if (_pickedFile != null) {
-        _imageFile = File(_pickedFile.path);
+        _imageFile = FileImage(File(_pickedFile.path));
       } else {
         print("No image has been selected");
       }
@@ -78,7 +78,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
       _qualification = _editedProfile.qualification;
       _expCtrlr.text = _editedProfile.experience;
       _dob = _editedProfile.dateOfBirth;
-      _imageFile = _editedProfile.profilePhoto as File?;
+      _imageFile = _editedProfile.profilePhoto;
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -107,7 +107,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     }
     _formKey.currentState!.save();
     _editedProfile = Profile(
-        // profilePhoto: _imageFile ,
+        profilePhoto: _imageFile,
         name: _nameCtrlr.text,
         gender: _gender,
         hospital: _hospitalCtrlr.text,
@@ -189,10 +189,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                                 child: CircleAvatar(
                                     radius: 60.0,
                                     // backgroundColor: Colors.white,
-                                    backgroundImage: _imageFile == null
-                                        ? AssetImage("assets/images/OIP.jpg")
-                                        : FileImage(_imageFile!)
-                                            as ImageProvider),
+                                    backgroundImage: _imageFile),
                               ),
                               Positioned(
                                 top: 70,
