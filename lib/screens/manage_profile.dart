@@ -3,23 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:manage_profile_3/models/profile.dart';
 import 'package:manage_profile_3/providers/user_data.dart';
+import 'package:manage_profile_3/widgets/my_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class ManageProfilePage extends StatefulWidget {
   static const routeName = '/manage_profile';
   @override
-  _ManageProfilePageState createState() => _ManageProfilePageState();
+  ManageProfilePageState createState() => ManageProfilePageState();
 }
 
-class _ManageProfilePageState extends State<ManageProfilePage> {
-  String? _role;
-  String? _gender;
-  String? _qualification;
-  DateTime? _dob;
+class ManageProfilePageState extends State<ManageProfilePage> {
+  static String? _role;
+  static String? _gender;
+  static String? _qualification;
+  static DateTime? _dob;
 
-  List listRole = ['Nurse', 'Nursing Incharge', 'Supervisor'];
-  List listGender = ['Male', 'Female'];
-  List listQualification = ['Nursing Degree1', 'Bachelor'];
+  static Map fields = {
+    "Role": _role,
+    "Qualification": _qualification,
+    "Gender": _gender,
+  };
+
+  static List listRole = ['Nurse', 'Nursing Incharge', 'Supervisor'];
+  static List listGender = ['Male', 'Female'];
+  static List listQualification = ['Nursing Degree1', 'Bachelor'];
 
   Color _iconColor = Colors.blue;
   final _nameCtrlr = TextEditingController();
@@ -35,7 +42,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
 
   String _dobFormField = 'Select Date of Birth';
 
-  FileImage? _imageFile;
+  File? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
   _takePhoto(BuildContext context, ImageSource source) async {
@@ -44,7 +51,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     );
     setState(() {
       if (_pickedFile != null) {
-        _imageFile = FileImage(File(_pickedFile.path));
+        _imageFile = File(_pickedFile.path);
       } else {
         print("No image has been selected");
       }
@@ -78,7 +85,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
       _qualification = _editedProfile.qualification;
       _expCtrlr.text = _editedProfile.experience;
       _dob = _editedProfile.dateOfBirth;
-      _imageFile = _editedProfile.profilePhoto;
+      _imageFile = _editedProfile.profilePhoto as File?;
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -107,13 +114,13 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     }
     _formKey.currentState!.save();
     _editedProfile = Profile(
-        profilePhoto: _imageFile,
+        // profilePhoto: _imageFile ,
         name: _nameCtrlr.text,
-        gender: _gender,
+        gender: fields["Gender"],
         hospital: _hospitalCtrlr.text,
         department: _departmentCtrlr.text,
-        role: _role,
-        qualification: _qualification,
+        role: fields["Role"],
+        qualification: fields["Qualification"],
         registration: _regCtrlr.text,
         experience: _expCtrlr.text,
         dateOfBirth: _dob);
@@ -162,7 +169,7 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     _dobFormField = _dob == null
         ? _dobFormField
         : "${_dob!.toLocal().day}/${_dob!.toLocal().month}/${_dob!.toLocal().year}";
-
+    print(_gender.toString() + "State");
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
@@ -189,7 +196,10 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                                 child: CircleAvatar(
                                     radius: 60.0,
                                     // backgroundColor: Colors.white,
-                                    backgroundImage: _imageFile),
+                                    backgroundImage: _imageFile == null
+                                        ? AssetImage("assets/images/OIP.jpg")
+                                        : FileImage(_imageFile!)
+                                            as ImageProvider),
                               ),
                               Positioned(
                                 top: 70,
@@ -276,155 +286,49 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                               )
                             ],
                           )),
-                      ListTile(
-                        leading: Container(
-                          height: double.infinity,
-                          child: Icon(
-                            Icons.account_circle,
-                            color: _iconColor,
-                            size: 30,
-                          ),
-                        ),
-                        title: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: "Name",
-                          ),
-                          controller: _nameCtrlr,
-                        ),
+                      MyListTile(
+                        icon: Icons.account_circle,
+                        labelText: "Name",
+                        controller: _nameCtrlr,
                       ),
-                      ListTile(
-                        leading: Container(
-                          height: double.infinity,
-                          child: Icon(
-                            Icons.emoji_people_outlined,
-                            color: _iconColor,
-                            size: 40,
-                          ),
-                        ),
-                        title: DropdownButton(
-                          isExpanded: true,
-                          dropdownColor: Colors.white,
-                          hint: Text("Select Gender"),
-                          value: _gender,
-                          onChanged: (value) {
-                            setState(() {
-                              _gender = value.toString();
-                            });
-                          },
-                          items: listGender.map((value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
+                      MyListTile(
+                        icon: Icons.emoji_people_outlined,
+                        hint: "Select Gender",
+                        object: "Gender",
+                        options: listGender,
                       ),
-
-                      ListTile(
-                        leading: Container(
-                          height: double.infinity,
-                          child: Icon(
-                            Icons.local_hospital,
-                            color: _iconColor,
-                            size: 30,
-                          ),
-                        ),
-                        title: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: "Hospital Name",
-                          ),
-                          controller: _hospitalCtrlr,
-                        ),
+                      MyListTile(
+                        icon: Icons.local_hospital,
+                        labelText: "Hospital Name",
+                        controller: _hospitalCtrlr,
                       ),
-                      ListTile(
-                        leading: Container(
-                          height: double.infinity,
-                          child: Icon(
-                            Icons.account_tree,
-                            color: _iconColor,
-                            size: 30,
-                          ),
-                        ),
-                        title: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: "Department Name",
-                          ),
-                          controller: _departmentCtrlr,
-                        ),
+                      MyListTile(
+                        icon: Icons.account_tree,
+                        labelText: "Department Name",
+                        controller: _departmentCtrlr,
                       ),
-
-                      ListTile(
-                        leading: Container(
-                          height: double.infinity,
-                          child: Icon(
-                            Icons.supervisor_account,
-                            color: _iconColor,
-                            size: 40,
-                          ),
-                        ),
-                        title: DropdownButton(
-                          isExpanded: true,
-                          dropdownColor: Colors.white,
-                          // icon: Icon(Icons.arrow_drop_down),
-                          hint: Text("Role/Designation"),
-                          value: _role,
-                          onChanged: (value) {
-                            setState(() {
-                              _role = value.toString();
-                            });
-                          },
-                          items: listRole.map((valueItem) {
-                            return DropdownMenuItem(
-                              value: valueItem,
-                              child: Text(valueItem),
-                            );
-                          }).toList(),
-                        ),
+                      MyListTile(
+                        icon: Icons.emoji_people_outlined,
+                        hint: "Role/Designation",
+                        object: "Role",
+                        options: listRole,
                       ),
-                      ListTile(
-                        leading: Container(
-                          height: double.infinity,
-                          child: Icon(
-                            Icons.supervisor_account,
-                            color: _iconColor,
-                            size: 40,
-                          ),
-                        ),
-                        title: DropdownButton(
-                          isExpanded: true,
-                          dropdownColor: Colors.white,
-                          hint: Text("Select Qualification"),
-                          value: _qualification,
-                          onChanged: (value) {
-                            setState(() {
-                              _qualification = value.toString();
-                            });
-                          },
-                          items: listQualification.map((value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
+                      MyListTile(
+                        icon: Icons.emoji_people_outlined,
+                        hint: "Select Qualification",
+                        object: "Qualification",
+                        options: listQualification,
                       ),
-                      ListTile(
-                        leading: Container(
-                          height: double.infinity,
-                          child: Icon(
-                            Icons.collections_bookmark,
-                            color: _iconColor,
-                            size: 30,
-                          ),
-                        ),
-                        title: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: "Registration Number",
-                          ),
-                          controller: _regCtrlr,
-                        ),
+                      MyListTile(
+                        icon: Icons.collections_bookmark,
+                        labelText: "Registration Number",
+                        controller: _regCtrlr,
                       ),
-
+                      MyListTile(
+                        icon: Icons.work,
+                        labelText: "Year Of Experience",
+                        controller: _expCtrlr,
+                      ),
                       ListTile(
                         leading: Icon(
                           Icons.verified_user,
@@ -444,26 +348,6 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                             " userId",
                             textAlign: TextAlign.start,
                           ),
-                        ),
-                      ),
-
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
-                      ListTile(
-                        leading: Container(
-                          height: double.infinity,
-                          child: Icon(
-                            Icons.work,
-                            color: _iconColor,
-                            size: 30,
-                          ),
-                        ),
-                        title: TextFormField(
-                          decoration: InputDecoration(
-                            labelText: "Year Of Experience",
-                          ),
-                          controller: _expCtrlr,
                         ),
                       ),
                       ListTile(
