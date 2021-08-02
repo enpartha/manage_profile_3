@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/manage_profile.dart';
 
-class MyListTile extends StatefulWidget {
+class EntryField extends StatefulWidget {
   final IconData? icon;
   final TextEditingController? controller;
   final double size;
@@ -10,7 +10,7 @@ class MyListTile extends StatefulWidget {
   final Object? object;
   final List<dynamic>? options;
 
-  MyListTile(
+  EntryField(
       {Key? key,
       this.icon,
       this.hint,
@@ -22,15 +22,15 @@ class MyListTile extends StatefulWidget {
       : super(key: key);
 
   @override
-  _MyListTileState createState() => _MyListTileState();
+  _EntryFieldState createState() => _EntryFieldState();
 }
 
-class _MyListTileState extends State<MyListTile> {
+class _EntryFieldState extends State<EntryField> {
   Color _iconColor = Colors.blue;
 
   @override
   Widget build(BuildContext context) {
-    return myListTile(
+    return entryField(
       controller: widget.controller,
       hint: widget.hint,
       icon: widget.icon,
@@ -41,7 +41,7 @@ class _MyListTileState extends State<MyListTile> {
     );
   }
 
-  myListTile({
+  entryField({
     IconData? icon,
     TextEditingController? controller,
     double size = 30.0,

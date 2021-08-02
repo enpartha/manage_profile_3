@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:manage_profile_3/models/profile.dart';
 import 'package:manage_profile_3/providers/user_data.dart';
-import 'package:manage_profile_3/widgets/my_list_tile.dart';
+import 'package:manage_profile_3/widgets/entry_field.dart';
 import 'package:provider/provider.dart';
 
 class ManageProfilePage extends StatefulWidget {
@@ -286,45 +286,45 @@ class ManageProfilePageState extends State<ManageProfilePage> {
                               )
                             ],
                           )),
-                      MyListTile(
+                      EntryField(
                         icon: Icons.account_circle,
                         labelText: "Name",
                         controller: _nameCtrlr,
                       ),
-                      MyListTile(
+                      EntryField(
                         icon: Icons.emoji_people_outlined,
                         hint: "Select Gender",
                         object: "Gender",
                         options: listGender,
                       ),
-                      MyListTile(
+                      EntryField(
                         icon: Icons.local_hospital,
                         labelText: "Hospital Name",
                         controller: _hospitalCtrlr,
                       ),
-                      MyListTile(
+                      EntryField(
                         icon: Icons.account_tree,
                         labelText: "Department Name",
                         controller: _departmentCtrlr,
                       ),
-                      MyListTile(
+                      EntryField(
                         icon: Icons.emoji_people_outlined,
                         hint: "Role/Designation",
                         object: "Role",
                         options: listRole,
                       ),
-                      MyListTile(
+                      EntryField(
                         icon: Icons.emoji_people_outlined,
                         hint: "Select Qualification",
                         object: "Qualification",
                         options: listQualification,
                       ),
-                      MyListTile(
+                      EntryField(
                         icon: Icons.collections_bookmark,
                         labelText: "Registration Number",
                         controller: _regCtrlr,
                       ),
-                      MyListTile(
+                      EntryField(
                         icon: Icons.work,
                         labelText: "Year Of Experience",
                         controller: _expCtrlr,
