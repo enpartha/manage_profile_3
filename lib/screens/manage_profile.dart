@@ -22,15 +22,28 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   List listQualification = ['Nursing Degree1', 'Bachelor'];
 
   Color _iconColor = Colors.blue;
-  final _nameCtrlr = TextEditingController();
-  final _hospitalCtrlr = TextEditingController();
-  final _departmentCtrlr = TextEditingController();
-  final _designationCtrlr = TextEditingController();
-  final _expCtrlr = TextEditingController();
-  final _regCtrlr = TextEditingController();
+  final _nameFocusNode = FocusNode();
+  final _hospitalFocusNode = FocusNode();
+  final _departmentFocusNode = FocusNode();
+  // final _designationFocusNode = FocusNode();
+  final _expFocusNode = FocusNode();
+  final _regFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
 
-  var _editedProfile = Profile();
+  var _editedProfile = Profile(
+    name: '',
+    hospital: '',
+    department: '',
+    registration: '',
+    experience: '',
+  );
+  var _initValues = {
+    'name': '',
+    'hospital': '',
+    'department': '',
+    'experience': '',
+    'registration': ''
+  };
   var userId;
 
   String _dobFormField = 'Select Date of Birth';
@@ -68,16 +81,22 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
   void didChangeDependencies() {
     if (_isInit) {
       _editedProfile = Provider.of<UserData>(context).data;
-
-      _nameCtrlr.text = _editedProfile.name;
-      _gender = _editedProfile.gender;
-      _hospitalCtrlr.text = _editedProfile.hospital;
-      _departmentCtrlr.text = _editedProfile.department;
-      _role = _editedProfile.role;
-      _regCtrlr.text = _editedProfile.registration;
-      _qualification = _editedProfile.qualification;
-      _expCtrlr.text = _editedProfile.experience;
-      _dob = _editedProfile.dateOfBirth;
+      _initValues = {
+        'name': _editedProfile.name,
+        'hospital': _editedProfile.hospital,
+        'department': _editedProfile.department,
+        'registration': _editedProfile.registration,
+        'experience': _editedProfile.experience,
+      };
+      // _nameFocusNode= _editedProfile.name;
+      //   _gender = _editedProfile.gender;
+      //  _hospitalFocusNode.text = _editedProfile.hospital;
+      //   _departmentCtrlr.text = _editedProfile.department;
+      //   _role = _editedProfile.role;
+      //   _regCtrlr.text = _editedProfile.registration;
+      //   _qualification = _editedProfile.qualification;
+      //   _expCtrlr.text = _editedProfile.experience;
+      //   _dob = _editedProfile.dateOfBirth;
       _imageFile = _editedProfile.profilePhoto as File?;
     }
     _isInit = false;
@@ -108,14 +127,14 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
     _formKey.currentState!.save();
     _editedProfile = Profile(
         // profilePhoto: _imageFile ,
-        name: _nameCtrlr.text,
-        gender: _gender,
-        hospital: _hospitalCtrlr.text,
-        department: _departmentCtrlr.text,
-        role: _role,
-        qualification: _qualification,
-        registration: _regCtrlr.text,
-        experience: _expCtrlr.text,
+        name: _editedProfile.name,
+        gender: _editedProfile.gender,
+        hospital: _editedProfile.hospital,
+        department: _editedProfile.department,
+        role: _editedProfile.role,
+        qualification: _editedProfile.qualification,
+        registration: _editedProfile.registration,
+        experience: _editedProfile.experience,
         dateOfBirth: _dob);
     print('saved');
     setState(() {
@@ -148,12 +167,13 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
 
   @override
   void dispose() {
-    _nameCtrlr.dispose();
-    _hospitalCtrlr.dispose();
-    _departmentCtrlr.dispose();
-    _designationCtrlr.dispose();
-    _expCtrlr.dispose();
-    _regCtrlr.dispose();
+    _nameFocusNode.dispose();
+    _nameFocusNode.dispose();
+    _departmentFocusNode.dispose();
+    // _designationFocusNode.dispose();
+    _expFocusNode.dispose();
+    _regFocusNode.dispose();
+
     super.dispose();
   }
 
@@ -292,7 +312,10 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                           decoration: InputDecoration(
                             labelText: "Name",
                           ),
-                          controller: _nameCtrlr,
+                          // controller: _nameCtrlr,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context).requestFocus(_nameFocusNode);
+                          },
                         ),
                       ),
                       ListTile(
@@ -336,7 +359,11 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                           decoration: InputDecoration(
                             labelText: "Hospital Name",
                           ),
-                          controller: _hospitalCtrlr,
+                          //
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context)
+                                .requestFocus(_hospitalFocusNode);
+                          },
                         ),
                       ),
                       ListTile(
@@ -352,7 +379,10 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                           decoration: InputDecoration(
                             labelText: "Department Name",
                           ),
-                          controller: _departmentCtrlr,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context)
+                                .requestFocus(_departmentFocusNode);
+                          },
                         ),
                       ),
 
@@ -424,7 +454,9 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                           decoration: InputDecoration(
                             labelText: "Registration Number",
                           ),
-                          controller: _regCtrlr,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context).requestFocus(_regFocusNode);
+                          },
                         ),
                       ),
 
@@ -466,7 +498,9 @@ class _ManageProfilePageState extends State<ManageProfilePage> {
                           decoration: InputDecoration(
                             labelText: "Year Of Experience",
                           ),
-                          controller: _expCtrlr,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context).requestFocus(_expFocusNode);
+                          },
                         ),
                       ),
                       ListTile(
